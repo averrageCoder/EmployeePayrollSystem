@@ -14,6 +14,10 @@ public class EmployeePayrollService {
 		this.employeePayrollList = list;
 	}
 
+	public EmployeePayrollService() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public static void main(String[] args) {	
 		ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList) ;
@@ -51,5 +55,14 @@ public class EmployeePayrollService {
 			return new EmployeePayrollFileIOService().countEntries();
 		}
 		return 0;
+	}
+
+	public long readEmployeePayrollData(IOService ioservice) {
+		if(ioservice.equals(IOService.FILE_I0)) {
+			this.employeePayrollList=new EmployeePayrollFileIOService().readEmployeePayrollData();
+			System.out.println("PARSED DATA FROM FILE: ");
+			this.employeePayrollList.forEach(employee -> System.out.println(employee));
+		}
+		return this.employeePayrollList.size();
 	}
 }
