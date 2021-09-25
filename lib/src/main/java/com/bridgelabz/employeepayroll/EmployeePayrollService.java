@@ -57,12 +57,17 @@ public class EmployeePayrollService {
 		return 0;
 	}
 
-	public long readEmployeePayrollData(IOService ioservice) {
+	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioservice) {
 		if(ioservice.equals(IOService.FILE_I0)) {
 			this.employeePayrollList=new EmployeePayrollFileIOService().readEmployeePayrollData();
 			System.out.println("PARSED DATA FROM FILE: ");
 			this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		}
-		return this.employeePayrollList.size();
+		else if(ioservice.equals(IOService.DB_I0)) {
+			this.employeePayrollList=new EmployeePayrollDBService().readEmployeePayrollData();
+			System.out.println("PARSED DATA FROM DB: ");
+			this.employeePayrollList.forEach(employee -> System.out.println(employee));
+		}
+		return this.employeePayrollList;
 	}
 }
