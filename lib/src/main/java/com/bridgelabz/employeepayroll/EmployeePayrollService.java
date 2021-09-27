@@ -66,7 +66,7 @@ public class EmployeePayrollService {
 			this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		}
 		else if(ioservice.equals(IOService.DB_I0)) {
-			this.employeePayrollList=new EmployeePayrollDBService().readEmployeePayrollData();
+			this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 			System.out.println("PARSED DATA FROM DB: ");
 			this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		}
@@ -74,13 +74,13 @@ public class EmployeePayrollService {
 	}
 
 	public void updateEmployeeSalary(String name, double updatedSalary) {
-		int result = new EmployeePayrollDBService().updateEmployee(name,updatedSalary);
+		int result = employeePayrollDBService.updateEmployee(name,updatedSalary);
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
 	
 	public void updateEmployeeSalaryUsingPrepareStatement(String name, double updatedSalary) {
-		int result = new EmployeePayrollDBService().updateEmployeeUsingPreparedStatement(name,updatedSalary);
+		int result =employeePayrollDBService.updateEmployeeUsingPreparedStatement(name,updatedSalary);
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
@@ -98,5 +98,12 @@ public class EmployeePayrollService {
 				.findFirst()
 				.orElse(null);
 		return employeePayrollData;
+	}
+	
+	public List<EmployeePayrollData> readEmployeePayrollDataUsingStartDate(String startDate) {
+		this.employeePayrollList=employeePayrollDBService.getEmployeeDetailsBasedOnStartDate(startDate);
+		System.out.println("PARSED DATA FROM DB: ");
+		this.employeePayrollList.forEach(employee -> System.out.println(employee));
+		return this.employeePayrollList;
 	}
 }
