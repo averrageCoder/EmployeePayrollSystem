@@ -8,14 +8,16 @@ public class EmployeePayrollService {
 	
 	public enum IOService {CONSOLEIO, FILE_I0, DB_I0, REST_I0}
 	private List<EmployeePayrollData> employeePayrollList;
+	private EmployeePayrollDBService employeePayrollDBService;
 
 
 	public EmployeePayrollService(List<EmployeePayrollData> list) {
+		this();
 		this.employeePayrollList = list;
 	}
 
 	public EmployeePayrollService() {
-		// TODO Auto-generated constructor stub
+		employeePayrollDBService = EmployeePayrollDBService.getInstance();
 	}
 
 	public static void main(String[] args) {	
@@ -69,5 +71,26 @@ public class EmployeePayrollService {
 			this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		}
 		return this.employeePayrollList;
+	}
+
+	public void updateEmployeeSalary(String name, double updatedSalary) {
+		int result = new EmployeePayrollDBService().updateEmployee(name,updatedSalary);
+		if (result==0) return;
+		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
+	}
+
+	public boolean checkEmployeePayrollWithDB(String name) {
+		// TODO Auto-generated method stub
+		List<EmployeePayrollData> employeePayrollData = employeePayrollDBService.getEmployeePayrollData(name);
+		return employeePayrollData.get(0).equals(getEmployeeData(name));	
+	}
+
+	private EmployeePayrollData getEmployeeData(String name) {
+		EmployeePayrollData employeePayrollData;
+		employeePayrollData = this.employeePayrollList.stream()
+				.filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
+				.findFirst()
+				.orElse(null);
+		return employeePayrollData;
 	}
 }
