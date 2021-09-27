@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bridgelabz.employeepayroll.EmployeePayrollExceptions.ExceptionType;
+
 public class EmployeePayrollDBService {
 	
 	private PreparedStatement employeePayrollDataStatement;
@@ -37,7 +39,7 @@ public class EmployeePayrollDBService {
 		return connection;
 	}
 
-	public List<EmployeePayrollData> readEmployeePayrollData() {
+	public List<EmployeePayrollData> readEmployeePayrollData() throws EmployeePayrollExceptions {
 		String sql="SELECT e.id,e.name,e.start_date, p.net_pay from employee e, payroll p where e.id=p.employee_id;";
 		List<EmployeePayrollData> employeePayrollData = new ArrayList<EmployeePayrollData>();
 		try (Connection connection = this.getConnection()) {
@@ -46,12 +48,12 @@ public class EmployeePayrollDBService {
 			employeePayrollData = this.getEmployeePayrollData(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return employeePayrollData;
 	}
 
-	public int updateEmployee(String name, double updatedSalary) {
+	public int updateEmployee(String name, double updatedSalary) throws EmployeePayrollExceptions {
 		String sql=String.format("update payroll p join employee e on e.id=p.employee_id set net_pay = %.2f where e.NAME='%s';",updatedSalary,name);
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
@@ -59,12 +61,11 @@ public class EmployeePayrollDBService {
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
-		return 0;
 	}
 	
-	public int updateEmployeeUsingPreparedStatement(String name, double updatedSalary) {
+	public int updateEmployeeUsingPreparedStatement(String name, double updatedSalary) throws EmployeePayrollExceptions {
 		String sql="update payroll p join employee e on e.id=p.employee_id set net_pay =? where e.NAME=?;";
 		List<EmployeePayrollData> employeePayrollData = null;
 		if(this.employeePayrollUpdateStatement == null)
@@ -74,12 +75,11 @@ public class EmployeePayrollDBService {
 			employeePayrollDataStatement.setString(2, name);
 			return employeePayrollDataStatement.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
-		return 0;
 	}
 	
-	public List<EmployeePayrollData> getEmployeeDetailsBasedOnStartDate(String startDate) {
+	public List<EmployeePayrollData> getEmployeeDetailsBasedOnStartDate(String startDate) throws EmployeePayrollExceptions {
 		String sql = String.format("select e.id,e.name,e.start_date,p.net_pay from employee e, payroll p where e.id=p.employee_id and start_date between CAST('%s' as date) and date(now());",startDate);
 		List<EmployeePayrollData> employeePayrollData = new ArrayList<EmployeePayrollData>();
 		try (Connection connection = this.getConnection()) {
@@ -88,12 +88,12 @@ public class EmployeePayrollDBService {
 			employeePayrollData = this.getEmployeePayrollData(resultSet);
 		}
 		catch(SQLException e){
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return employeePayrollData;
 	}
 
-	public List<EmployeePayrollData> getEmployeePayrollData(String name) {
+	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeePayrollExceptions {
 		List<EmployeePayrollData> employeePayrollData = null;
 		//if(this.employeePayrollDataStatement == null)
 			this.prepareStatementForEmployeeData();
@@ -103,12 +103,12 @@ public class EmployeePayrollDBService {
 			employeePayrollData = this.getEmployeePayrollData(resultSet);
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return employeePayrollData;
 	}
 
-	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) {
+	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) throws EmployeePayrollExceptions {
 		List<EmployeePayrollData> employeePayrollData = new ArrayList<>();
 		try {
 			while(resultSet.next()) {
@@ -120,35 +120,35 @@ public class EmployeePayrollDBService {
 			}
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return employeePayrollData;
 	}
 
-	private void prepareStatementForEmployeeData() {
+	private void prepareStatementForEmployeeData() throws EmployeePayrollExceptions {
 		try {
 			Connection connection = this.getConnection();
 			String sql = "SELECT e.id,e.name,e.start_date, p.net_pay from employee e, payroll p where e.id=p.employee_id and e.name=?;";
 			employeePayrollDataStatement = connection.prepareStatement(sql);
 		}
 		catch(SQLException e) {
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		
 	}
 	
-	private void prepareStatementForUpdateData(String sql) {
+	private void prepareStatementForUpdateData(String sql) throws EmployeePayrollExceptions {
 		try {
 			Connection connection = this.getConnection();
 			employeePayrollDataStatement = connection.prepareStatement(sql);
 		}
 		catch(SQLException e) {
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		
 	}
 
-	public double getSalarySumBasedOnGender(String gender) {
+	public double getSalarySumBasedOnGender(String gender) throws EmployeePayrollExceptions {
 		String sql = String.format("select sum(net_pay) from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
 		double salarySum = 0;
 		try (Connection connection = this.getConnection()) {
@@ -159,12 +159,12 @@ public class EmployeePayrollDBService {
 			}
 		}
 		catch(SQLException e){
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return salarySum;
 	}
 
-	public double getSalaryAvgBasedOnGender(String gender) {
+	public double getSalaryAvgBasedOnGender(String gender) throws EmployeePayrollExceptions {
 		String sql = String.format("select avg(net_pay) from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
 		double salaryAvg = 0;
 		try (Connection connection = this.getConnection()) {
@@ -175,12 +175,12 @@ public class EmployeePayrollDBService {
 			}
 		}
 		catch(SQLException e){
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return salaryAvg;
 	}
 
-	public double getSalaryMaxBasedOnGender(String gender) {
+	public double getSalaryMaxBasedOnGender(String gender) throws EmployeePayrollExceptions {
 		String sql = String.format("select max(net_pay) as max from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
 		double salaryMax = 0;
 		try (Connection connection = this.getConnection()) {
@@ -191,7 +191,7 @@ public class EmployeePayrollDBService {
 			}
 		}
 		catch(SQLException e){
-			e.printStackTrace();
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return salaryMax;
 	}

@@ -59,7 +59,7 @@ public class EmployeePayrollService {
 		return 0;
 	}
 
-	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioservice) {
+	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioservice) throws EmployeePayrollExceptions {
 		if(ioservice.equals(IOService.FILE_I0)) {
 			this.employeePayrollList=new EmployeePayrollFileIOService().readEmployeePayrollData();
 			System.out.println("PARSED DATA FROM FILE: ");
@@ -73,19 +73,19 @@ public class EmployeePayrollService {
 		return this.employeePayrollList;
 	}
 
-	public void updateEmployeeSalary(String name, double updatedSalary) {
+	public void updateEmployeeSalary(String name, double updatedSalary) throws EmployeePayrollExceptions {
 		int result = employeePayrollDBService.updateEmployee(name,updatedSalary);
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
 	
-	public void updateEmployeeSalaryUsingPrepareStatement(String name, double updatedSalary) {
+	public void updateEmployeeSalaryUsingPrepareStatement(String name, double updatedSalary) throws EmployeePayrollExceptions {
 		int result =employeePayrollDBService.updateEmployeeUsingPreparedStatement(name,updatedSalary);
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
 
-	public boolean checkEmployeePayrollWithDB(String name) {
+	public boolean checkEmployeePayrollWithDB(String name) throws EmployeePayrollExceptions {
 		// TODO Auto-generated method stub
 		List<EmployeePayrollData> employeePayrollData = employeePayrollDBService.getEmployeePayrollData(name);
 		return employeePayrollData.get(0).equals(getEmployeeData(name));	
@@ -100,24 +100,24 @@ public class EmployeePayrollService {
 		return employeePayrollData;
 	}
 	
-	public List<EmployeePayrollData> readEmployeePayrollDataUsingStartDate(String startDate) {
+	public List<EmployeePayrollData> readEmployeePayrollDataUsingStartDate(String startDate) throws EmployeePayrollExceptions {
 		this.employeePayrollList=employeePayrollDBService.getEmployeeDetailsBasedOnStartDate(startDate);
 		System.out.println("PARSED DATA FROM DB: ");
 		this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		return this.employeePayrollList;
 	}
 
-	public double findSalarySumUsingGender(String gender) {
+	public double findSalarySumUsingGender(String gender) throws EmployeePayrollExceptions {
 		double sumsalaryForGender = employeePayrollDBService.getSalarySumBasedOnGender(gender);
 		return sumsalaryForGender;
 	}
 
-	public double findSalaryAvgUsingGender(String gender) {
+	public double findSalaryAvgUsingGender(String gender) throws EmployeePayrollExceptions {
 		double avgSalaryForGender = employeePayrollDBService.getSalaryAvgBasedOnGender(gender);
 		return avgSalaryForGender;
 	}
 
-	public double findSalaryMaxUsingGender(String gender) {
+	public double findSalaryMaxUsingGender(String gender) throws EmployeePayrollExceptions {
 		double avgSalaryForGender = employeePayrollDBService.getSalaryMaxBasedOnGender(gender);
 		return avgSalaryForGender;
 	}
