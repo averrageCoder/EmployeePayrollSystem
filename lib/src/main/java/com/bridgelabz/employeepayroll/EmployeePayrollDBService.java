@@ -13,6 +13,7 @@ import java.util.List;
 public class EmployeePayrollDBService {
 	
 	private PreparedStatement employeePayrollDataStatement;
+	private PreparedStatement employeePayrollUpdateStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
 	
 	public EmployeePayrollDBService() {
@@ -62,6 +63,20 @@ public class EmployeePayrollDBService {
 		}
 		return 0;
 	}
+	
+	public int updateEmployeeUsingPreparedStatement(String name, double updatedSalary) {
+		String sql="update payroll p join employee e on e.id=p.employee_id set net_pay =? where e.NAME=?;";
+		List<EmployeePayrollData> employeePayrollData = null;
+		if(this.employeePayrollUpdateStatement == null)
+			this.prepareStatementForUpdateData(sql);
+		try {
+			employeePayrollDataStatement.setString(1, name);
+			return employeePayrollDataStatement.executeQuery().getRow();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) {
 		List<EmployeePayrollData> employeePayrollData = null;
@@ -99,6 +114,17 @@ public class EmployeePayrollDBService {
 		try {
 			Connection connection = this.getConnection();
 			String sql = "SELECT e.id,e.name,e.start_date, p.net_pay from employee e, payroll p where e.id=p.employee_id and e.name=?;";
+			employeePayrollDataStatement = connection.prepareStatement(sql);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void prepareStatementForUpdateData(String sql) {
+		try {
+			Connection connection = this.getConnection();
 			employeePayrollDataStatement = connection.prepareStatement(sql);
 		}
 		catch(SQLException e) {
