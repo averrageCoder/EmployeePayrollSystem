@@ -46,4 +46,13 @@ public class EmployeePayrollServiceTest {
 		boolean result = employeePayrollService.checkEmployeePayrollWithDB("Terissa");
 		assertTrue(result);
 	}
+	
+	@Test
+	public void givenEmployeeSalary_whenUpdatedUsingPrepareStatementShouldMatch() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_I0);
+		employeePayrollService.updateEmployeeSalaryUsingPrepareStatement("Terissa",3000000);
+		boolean result = employeePayrollService.checkEmployeePayrollWithDB("Terissa");
+		assertTrue(result);
+	}
 }
