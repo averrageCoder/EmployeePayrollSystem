@@ -55,7 +55,7 @@ public class EmployeePayrollDBService {
 		String sql=String.format("update payroll p join employee e on e.id=p.employee_id set net_pay = %.2f where e.NAME='%s';",updatedSalary,name);
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
-			return statement.executeQuery(sql).getRow();
+			return statement.executeUpdate(sql);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -70,8 +70,9 @@ public class EmployeePayrollDBService {
 		if(this.employeePayrollUpdateStatement == null)
 			this.prepareStatementForUpdateData(sql);
 		try {
-			employeePayrollDataStatement.setString(1, name);
-			return employeePayrollDataStatement.executeQuery().getRow();
+			employeePayrollDataStatement.setDouble(1, updatedSalary);
+			employeePayrollDataStatement.setString(2, name);
+			return employeePayrollDataStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
