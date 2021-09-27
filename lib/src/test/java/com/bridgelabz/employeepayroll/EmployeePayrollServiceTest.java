@@ -62,4 +62,46 @@ public class EmployeePayrollServiceTest {
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataUsingStartDate("2019-01-01");
 		assertEquals(2, employeePayrollData.size());
 	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedSumForFemaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double sumOfMaleSalaries = employeePayrollService.findSalarySumUsingGender("F");
+		assertEquals(3000000.0, sumOfMaleSalaries);
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedSumForMaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double sumOfMaleSalaries = employeePayrollService.findSalarySumUsingGender("M");
+		assertEquals(4100000.0, sumOfMaleSalaries);
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedAvgForFemaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double avgOfFemaleSalaries = employeePayrollService.findSalaryAvgUsingGender("F");
+		assertEquals(3000000, avgOfFemaleSalaries);
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedAvgForMaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double avgOfMaleSalaries = employeePayrollService.findSalaryAvgUsingGender("M");
+		assertEquals(2050000, avgOfMaleSalaries);
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedMaxForFemaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double maxOfFemaleSalaries = employeePayrollService.findSalaryMaxUsingGender("F");
+		assertEquals(3000000, maxOfFemaleSalaries);
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedMaxForMaleShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		double maxOfMaleSalaries = employeePayrollService.findSalaryMaxUsingGender("M");
+		assertEquals(4000000, maxOfMaleSalaries);
+	}
 }
