@@ -148,4 +148,52 @@ public class EmployeePayrollDBService {
 		
 	}
 
+	public double getSalarySumBasedOnGender(String gender) {
+		String sql = String.format("select sum(net_pay) from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
+		double salarySum = 0;
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				salarySum = resultSet.getDouble("sum(net_pay)");
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return salarySum;
+	}
+
+	public double getSalaryAvgBasedOnGender(String gender) {
+		String sql = String.format("select avg(net_pay) from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
+		double salaryAvg = 0;
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				salaryAvg = resultSet.getDouble("avg(net_pay)");
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return salaryAvg;
+	}
+
+	public double getSalaryMaxBasedOnGender(String gender) {
+		String sql = String.format("select max(net_pay) as max from employee e, payroll p where e.id=p.employee_id and gender='%s' group by gender;",gender);
+		double salaryMax = 0;
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while(resultSet.next()) {
+				salaryMax = resultSet.getDouble("max");
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return salaryMax;
+	}
+
 }
