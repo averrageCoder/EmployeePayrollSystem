@@ -1,9 +1,10 @@
 package com.bridgelabz.employeepayroll;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class EmployeePayrollData {
-	
+
 	public int id;
 	public String name;
 	public double salary;
@@ -25,4 +26,17 @@ public class EmployeePayrollData {
 		return "id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EmployeePayrollData other = (EmployeePayrollData) obj;
+		return id == other.id
+				&& Double.compare(other.salary,salary) == 0
+				&& name.equals(other.name);
+	}
 }
