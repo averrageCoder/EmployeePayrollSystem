@@ -78,10 +78,24 @@ public class EmployeePayrollDBService {
 		}
 		return 0;
 	}
+	
+	public List<EmployeePayrollData> getEmployeeDetailsBasedOnStartDate(String startDate) {
+		String sql = String.format("select e.id,e.name,e.start_date,p.net_pay from employee e, payroll p where e.id=p.employee_id and start_date between CAST('%s' as date) and date(now());",startDate);
+		List<EmployeePayrollData> employeePayrollData = new ArrayList<EmployeePayrollData>();
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			employeePayrollData = this.getEmployeePayrollData(resultSet);
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return employeePayrollData;
+	}
 
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) {
 		List<EmployeePayrollData> employeePayrollData = null;
-		if(this.employeePayrollDataStatement == null)
+		//if(this.employeePayrollDataStatement == null)
 			this.prepareStatementForEmployeeData();
 		try {
 			employeePayrollDataStatement.setString(1, name);
