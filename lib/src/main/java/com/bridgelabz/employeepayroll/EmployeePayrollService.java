@@ -106,4 +106,19 @@ public class EmployeePayrollService {
 		this.employeePayrollList.forEach(employee -> System.out.println(employee));
 		return this.employeePayrollList;
 	}
+
+	public double findSalarySumUsingGender(String gender) {
+		double sumsalaryForGender = employeePayrollDBService.getSalarySumBasedOnGender(gender);
+		return sumsalaryForGender;
+	}
+
+	public double findSalaryAvgUsingGender(String gender) {
+		double avgSalaryForGender = employeePayrollDBService.getSalaryAvgBasedOnGender(gender);
+		return avgSalaryForGender;
+	}
+
+	public double findSalaryMaxUsingGender(String gender) {
+		double avgSalaryForGender = employeePayrollDBService.getSalaryMaxBasedOnGender(gender);
+		return avgSalaryForGender;
+	}
 }
