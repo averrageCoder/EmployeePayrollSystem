@@ -55,4 +55,11 @@ public class EmployeePayrollServiceTest {
 		boolean result = employeePayrollService.checkEmployeePayrollWithDB("Terissa");
 		assertTrue(result);
 	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_whenRetreivedDataUsingStartDateShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataUsingStartDate("2019-01-01");
+		assertEquals(2, employeePayrollData.size());
+	}
 }
