@@ -78,6 +78,12 @@ public class EmployeePayrollService {
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
+	
+	public void updateEmployeeSalaryUsingPrepareStatement(String name, double updatedSalary) {
+		int result = new EmployeePayrollDBService().updateEmployeeUsingPreparedStatement(name,updatedSalary);
+		if (result==0) return;
+		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
+	}
 
 	public boolean checkEmployeePayrollWithDB(String name) {
 		// TODO Auto-generated method stub
