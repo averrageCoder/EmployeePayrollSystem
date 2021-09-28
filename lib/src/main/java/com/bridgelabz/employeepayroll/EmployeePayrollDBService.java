@@ -41,16 +41,7 @@ public class EmployeePayrollDBService {
 
 	public List<EmployeePayrollData> readEmployeePayrollData() throws EmployeePayrollExceptions {
 		String sql="SELECT e.id,e.name,e.start_date, p.net_pay from employee e, payroll p where e.id=p.employee_id;";
-		List<EmployeePayrollData> employeePayrollData = new ArrayList<EmployeePayrollData>();
-		try (Connection connection = this.getConnection()) {
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
-			employeePayrollData = this.getEmployeePayrollData(resultSet);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
-		}
-		return employeePayrollData;
+		return this.getEmployeeDataBasedOnSQL(sql);
 	}
 
 	public int updateEmployee(String name, double updatedSalary) throws EmployeePayrollExceptions {
@@ -81,6 +72,12 @@ public class EmployeePayrollDBService {
 	
 	public List<EmployeePayrollData> getEmployeeDetailsBasedOnStartDate(String startDate) throws EmployeePayrollExceptions {
 		String sql = String.format("select e.id,e.name,e.start_date,p.net_pay from employee e, payroll p where e.id=p.employee_id and start_date between CAST('%s' as date) and date(now());",startDate);
+		return this.getEmployeeDataBasedOnSQL(sql);
+	}
+	
+	
+
+	private List<EmployeePayrollData> getEmployeeDataBasedOnSQL(String sql) throws EmployeePayrollExceptions {
 		List<EmployeePayrollData> employeePayrollData = new ArrayList<EmployeePayrollData>();
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
@@ -96,7 +93,7 @@ public class EmployeePayrollDBService {
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeePayrollExceptions {
 		List<EmployeePayrollData> employeePayrollData = null;
 		//if(this.employeePayrollDataStatement == null)
-			this.prepareStatementForEmployeeData();
+		this.prepareStatementForEmployeeData();
 		try {
 			employeePayrollDataStatement.setString(1, name);
 			ResultSet resultSet = employeePayrollDataStatement.executeQuery();
