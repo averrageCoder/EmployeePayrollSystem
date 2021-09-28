@@ -31,7 +31,7 @@ public class EmployeePayrollData {
 
 	@Override
 	public String toString() {
-		return "id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate+ ", Department=" + Arrays.toString(Department.toArray());
+		return "id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate;
 	}
 	
 	@Override
