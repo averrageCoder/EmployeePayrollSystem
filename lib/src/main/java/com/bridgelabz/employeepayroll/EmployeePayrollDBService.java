@@ -1,6 +1,7 @@
 package com.bridgelabz.employeepayroll;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -191,6 +192,30 @@ public class EmployeePayrollDBService {
 			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return salaryMax;
+	}
+
+	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start_date, String gender, String phone, String address) throws EmployeePayrollExceptions {
+		int employeeID = -1;
+		EmployeePayrollData employeeData = null;
+		String sql = String.format("INSERT INTO `employee`\n"
+				+ "(`name`,`gender`,`phone_number`,`address`,`start_date`)\n"
+				+ "VALUES('%s','%s','%s','%s','%s');",name,gender,phone,address, Date.valueOf(start_date));
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if(rowAffected==1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next()) employeeID = resultSet.getInt(1);
+				String sql2 = String.format("INSERT INTO `payroll` (`employee_id`,`basic_pay`,`deductions`,`taxable_pay`,`tax`,`net_pay`)\n"
+						+ "VALUES(%s,%s,0,0,0,%s);",employeeID, salary, salary);
+				rowAffected = statement.executeUpdate(sql2, statement.RETURN_GENERATED_KEYS);
+			}
+			employeeData = new EmployeePayrollData(employeeID, name, salary, start_date);
+		}
+		catch(SQLException e){
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
+		}
+		return employeeData;
 	}
 
 }
