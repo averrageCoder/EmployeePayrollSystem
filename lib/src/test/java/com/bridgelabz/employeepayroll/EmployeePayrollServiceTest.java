@@ -192,4 +192,21 @@ public class EmployeePayrollServiceTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenNewEmployee_WhenRemovedForER_ShouldBeInSyncWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData;
+		try {
+			employeePayrollData = employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_I0);
+			List<String> Department = new ArrayList<String>();
+			Department.add("Finance");
+			Department.add("Security");
+			employeePayrollService.removeEmployeeToPayrollWithER("Mark");
+			boolean result = employeePayrollService.checkEmployeePayrollWithDBWithER("Mark");
+			assertTrue(!result);
+		} catch (EmployeePayrollExceptions e) {
+			e.printStackTrace();
+		}
+	}
 }
