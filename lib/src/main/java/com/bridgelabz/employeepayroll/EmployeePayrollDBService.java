@@ -83,7 +83,20 @@ public class EmployeePayrollDBService {
 		} catch (SQLException e) {
 			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
+	}public int removeEmployeeUsingName(String name) throws EmployeePayrollExceptions {
+		String sql="delete from employee e where e.NAME=?;";
+		List<EmployeePayrollData> employeePayrollData = null;
+		if(this.employeePayrollUpdateStatement == null)
+			this.prepareStatementForUpdateData(sql);
+		try {
+			employeePayrollDataStatement.setString(1, name);
+			return employeePayrollDataStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
+		}
 	}
+	
+	
 	
 	public List<EmployeePayrollData> getEmployeeDetailsBasedOnStartDate(String startDate) throws EmployeePayrollExceptions {
 		String sql = String.format("select e.id,e.name,e.start_date,p.baic_pay from employee e, payroll p where e.id=p.employee_id and start_date between CAST('%s' as date) and date(now());",startDate);
