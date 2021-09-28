@@ -1,6 +1,7 @@
 package com.bridgelabz.employeepayroll;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -107,7 +108,7 @@ public class EmployeePayrollServiceTest {
 		double sumOfMaleSalaries;
 		try {
 			sumOfMaleSalaries = employeePayrollService.findSalarySumUsingGender("M");
-			assertEquals(4100000.0, sumOfMaleSalaries);
+			assertEquals(5100000.0, sumOfMaleSalaries);
 		} catch (EmployeePayrollExceptions e) {
 			e.printStackTrace();
 		}
@@ -131,7 +132,7 @@ public class EmployeePayrollServiceTest {
 		double avgOfMaleSalaries;
 		try {
 			avgOfMaleSalaries = employeePayrollService.findSalaryAvgUsingGender("M");
-			assertEquals(2050000, avgOfMaleSalaries);
+			assertEquals(1700000, avgOfMaleSalaries);
 		} catch (EmployeePayrollExceptions e) {
 			e.printStackTrace();
 		}
@@ -156,6 +157,20 @@ public class EmployeePayrollServiceTest {
 		try {
 			maxOfMaleSalaries = employeePayrollService.findSalaryMaxUsingGender("M");
 			assertEquals(4000000, maxOfMaleSalaries);
+		} catch (EmployeePayrollExceptions e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldBeInSyncWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData;
+		try {
+			employeePayrollData = employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_I0);
+			employeePayrollService.addEmployeeToPayroll("Mark",1000000, LocalDate.now(), "M", "7894561230", "Bangalore");
+			boolean result = employeePayrollService.checkEmployeePayrollWithDB("Mark");
+			assertTrue(result);
 		} catch (EmployeePayrollExceptions e) {
 			e.printStackTrace();
 		}
