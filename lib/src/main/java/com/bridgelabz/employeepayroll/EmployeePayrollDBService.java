@@ -200,7 +200,10 @@ public class EmployeePayrollDBService {
 		String sql = String.format("INSERT INTO `employee`\n"
 				+ "(`name`,`gender`,`phone_number`,`address`,`start_date`)\n"
 				+ "VALUES('%s','%s','%s','%s','%s');",name,gender,phone,address, Date.valueOf(start_date));
-		try (Connection connection = this.getConnection()) {
+		Connection connection = null;
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
 			Statement statement = connection.createStatement();
 			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
 			if(rowAffected==1) {
@@ -215,8 +218,14 @@ public class EmployeePayrollDBService {
 				rowAffected = statement.executeUpdate(sql2, statement.RETURN_GENERATED_KEYS);
 			}
 			employeeData = new EmployeePayrollData(employeeID, name, salary, start_date);
+			connection.commit();
 		}
 		catch(SQLException e){
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
+			}
 			throw new EmployeePayrollExceptions(ExceptionType.SQL_ERROR, "SQL ERROR!");
 		}
 		return employeeData;
