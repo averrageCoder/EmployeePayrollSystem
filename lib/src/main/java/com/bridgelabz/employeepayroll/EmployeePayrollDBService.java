@@ -206,8 +206,12 @@ public class EmployeePayrollDBService {
 			if(rowAffected==1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if(resultSet.next()) employeeID = resultSet.getInt(1);
+				double deductions = salary * 0.2;
+				double taxable_pay = salary -deductions;
+				double tax = salary*0.1;
+				double net_pay = salary-tax;
 				String sql2 = String.format("INSERT INTO `payroll` (`employee_id`,`basic_pay`,`deductions`,`taxable_pay`,`tax`,`net_pay`)\n"
-						+ "VALUES(%s,%s,0,0,0,%s);",employeeID, salary, salary);
+						+ "VALUES(%s,%s,%s,%s,%s,%s);",employeeID, salary, deductions, taxable_pay, tax, net_pay);
 				rowAffected = statement.executeUpdate(sql2, statement.RETURN_GENERATED_KEYS);
 			}
 			employeeData = new EmployeePayrollData(employeeID, name, salary, start_date);
