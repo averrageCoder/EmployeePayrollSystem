@@ -1,7 +1,9 @@
 package com.bridgelabz.employeepayroll;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import java.util.Arrays;
 
 public class EmployeePayrollData {
 
@@ -9,6 +11,7 @@ public class EmployeePayrollData {
 	public String name;
 	public double salary;
 	public LocalDate startDate;
+	public List<String> Department;
 	
 	public EmployeePayrollData(int id, String name, double salary) {
 		this.id = id;
@@ -20,10 +23,15 @@ public class EmployeePayrollData {
 		this(id,name,salary);
 		this.startDate = startDate;
 	}
+	
+	public EmployeePayrollData(int id, String name, double salary, LocalDate startDate, List<String> Department) {
+		this(id,name,salary,startDate);
+		this.Department = Department;
+	}
 
 	@Override
 	public String toString() {
-		return "id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate;
+		return "id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate+ ", Department=" + Arrays.toString(Department.toArray());
 	}
 	
 	@Override
