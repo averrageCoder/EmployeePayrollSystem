@@ -43,6 +43,11 @@ public class EmployeePayrollService {
 		this.employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start_date, gender, phone, address));	
 	}
 	
+	public void addEmployeeToPayrollWithER(String name, double salary, LocalDate start_date, String gender, String phone, 
+			String address, List<String> department) throws EmployeePayrollExceptions {
+		this.employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollWithER(name, salary, start_date, gender, phone, address, department));
+	}
+	
 	void writeEmployeePayrollData(IOService ioservice) {	
 		if(ioservice.equals(IOService.CONSOLEIO))
 			System.out.println("\nWriting Employee Payroll to Console\n" + employeePayrollList);
@@ -95,6 +100,11 @@ public class EmployeePayrollService {
 		List<EmployeePayrollData> employeePayrollData = employeePayrollDBService.getEmployeePayrollData(name);
 		return employeePayrollData.get(0).equals(getEmployeeData(name));	
 	}
+	
+	public boolean checkEmployeePayrollWithDBWithER1(String name) throws EmployeePayrollExceptions {
+		List<EmployeePayrollData> employeePayrollData = employeePayrollDBService.getEmployeePayrollDataWithER(name);
+		return employeePayrollData.get(0).equals(getEmployeeData(name));
+	}
 
 	private EmployeePayrollData getEmployeeData(String name) {
 		EmployeePayrollData employeePayrollData;
@@ -125,5 +135,10 @@ public class EmployeePayrollService {
 	public double findSalaryMaxUsingGender(String gender) throws EmployeePayrollExceptions {
 		double avgSalaryForGender = employeePayrollDBService.getSalaryMaxBasedOnGender(gender);
 		return avgSalaryForGender;
+	}
+
+	public boolean checkEmployeePayrollWithDBWithER(String string) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
