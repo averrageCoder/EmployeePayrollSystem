@@ -94,7 +94,13 @@ public class EmployeePayrollService {
 		if (result==0) return;
 		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
 	}
-
+	
+	public void removeEmployeeToPayrollWithER(String name) throws EmployeePayrollExceptions {
+		int result =employeePayrollDBService.removeEmployeeUsingName(name);
+		if (result==0) return;
+		this.employeePayrollList=employeePayrollDBService.readEmployeePayrollData();
+	}
+	
 	public boolean checkEmployeePayrollWithDB(String name) throws EmployeePayrollExceptions {
 		// TODO Auto-generated method stub
 		List<EmployeePayrollData> employeePayrollData = employeePayrollDBService.getEmployeePayrollData(name);
